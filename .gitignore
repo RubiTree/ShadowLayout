@@ -7,7 +7,6 @@
 /build
 /captures
 .externalNativeBuild
-/gradle
 
 ### Android template
 # Built application files
