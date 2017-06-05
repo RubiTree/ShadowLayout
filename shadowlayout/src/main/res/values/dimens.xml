@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="shadow_layout_default_corner_radius">4dp</dimen>
+    <dimen name="shadow_layout_default_shadow_radius">4dp</dimen>
+
+</resources>
