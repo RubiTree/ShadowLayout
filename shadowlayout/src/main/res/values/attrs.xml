@@ -11,6 +11,7 @@
         <attr name="shadow_padding_right" format="dimension"/>
         <attr name="shadow_padding_top" format="dimension"/>
         <attr name="shadow_padding_bottom" format="dimension"/>
+        <attr name="invalidate_shadow_on_size_changed" format="boolean"/>
     </declare-styleable>
 
 </resources>

@@ -20,7 +20,7 @@ import android.widget.FrameLayout;
  * Created by Zhengyu.Xiong ; On 2017-06-05.
  */
 
-public class ShadowLayout extends FrameLayout{
+public class ShadowLayout extends FrameLayout {
     private int shadowColor; // 阴影颜色
     private float cornerRadius; // 阴影实体边缘的圆角半径
     private float shadowRadius; // 投影半径，对应PS阴影设置中的大小，是阴影渐变区的半径，上下左右都会增加区域，0会导致没有阴影
@@ -31,8 +31,8 @@ public class ShadowLayout extends FrameLayout{
     private float shadowPaddingTop; // 阴影区域上方的缩进
     private float shadowPaddingBottom; // 阴影区域下方的缩进
 
-    private boolean mInvalidateShadowOnSizeChanged = true;
-    private boolean mForceInvalidateShadow = false;
+    private boolean invalidateShadowOnSizeChanged;
+    private boolean forceInvalidateShadow = false;
 
     public ShadowLayout(Context context) {
         super(context);
@@ -51,6 +51,7 @@ public class ShadowLayout extends FrameLayout{
 
     private void initView(Context context, AttributeSet attrs) {
         initAttributes(context, attrs);
+        adjustAttributes();
 
         int paddingLeft = (int) (shadowRadius - shadowOffsetX - shadowPaddingLeft);
         int paddingRight = (int) (shadowRadius + shadowOffsetX - shadowPaddingRight);
@@ -64,7 +65,7 @@ public class ShadowLayout extends FrameLayout{
     private void initAttributes(Context context, AttributeSet attrs) {
         if (attrs == null) return;
 
-        TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.ShadowLayout,0,0);
+        TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.ShadowLayout, 0, 0);
 
         cornerRadius = attr.getDimension(R.styleable.ShadowLayout_corner_radius,
                 getResources().getDimension(R.dimen.shadow_layout_default_corner_radius));
@@ -78,8 +79,22 @@ public class ShadowLayout extends FrameLayout{
         shadowPaddingRight = attr.getDimension(R.styleable.ShadowLayout_shadow_padding_right, 0);
         shadowPaddingTop = attr.getDimension(R.styleable.ShadowLayout_shadow_padding_top, 0);
         shadowPaddingBottom = attr.getDimension(R.styleable.ShadowLayout_shadow_padding_bottom, 0);
+        invalidateShadowOnSizeChanged = attr.getBoolean(R.styleable.ShadowLayout_invalidate_shadow_on_size_changed, true);
 
         attr.recycle();
+    }
+
+    /**
+     * Cause {@link Paint#setShadowLayer(float, float, float, int)} will set alpha of the shadow as
+     * the paint's alpha if the shadow color is opaque, or the alpha from the shadow color if not.
+     */
+    private void adjustAttributes() {
+        if (Color.alpha(shadowColor) >= 255) {
+            int red = Color.red(shadowColor);
+            int green = Color.green(shadowColor);
+            int blue = Color.blue(shadowColor);
+            shadowColor = Color.argb(254, red, green, blue);
+        }
     }
 
     /*--------------------------------------------------------------------------------------------*/
@@ -99,8 +114,8 @@ public class ShadowLayout extends FrameLayout{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (w > 0 && h > 0 && (getBackground() == null || mInvalidateShadowOnSizeChanged || mForceInvalidateShadow)) {
-            mForceInvalidateShadow = false;
+        if (w > 0 && h > 0 && (getBackground() == null || invalidateShadowOnSizeChanged || forceInvalidateShadow)) {
+            forceInvalidateShadow = false;
             setBackgroundCompat(w, h);
         }
     }
@@ -108,17 +123,19 @@ public class ShadowLayout extends FrameLayout{
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        if (mForceInvalidateShadow) {
-            mForceInvalidateShadow = false;
+        if (forceInvalidateShadow) {
+            forceInvalidateShadow = false;
             setBackgroundCompat(right - left, bottom - top);
         }
     }
 
     /*-------------------------------------------------*/
 
-    @SuppressWarnings("deprecation")
     private void setBackgroundCompat(int w, int h) {
-        // Cause paint.setShadowLayer() can not be previewed.
+
+        /**
+         * Cause {@link Paint#setShadowLayer(float, float, float, int)} can not be previewed in xml
+         */
         if (isInEditMode()) {
             setBackgroundColor(shadowColor);
             return;
@@ -136,7 +153,7 @@ public class ShadowLayout extends FrameLayout{
     private Bitmap createShadowBitmap(int shadowWidth, int shadowHeight,
                                       float cornerRadius, float shadowRadius, int shadowColor) {
 
-        Bitmap output = Bitmap.createBitmap(shadowWidth, shadowHeight, Bitmap.Config.ARGB_8888);
+        Bitmap output = Bitmap.createBitmap(shadowWidth, shadowHeight, Bitmap.Config.ARGB_4444);
         Canvas canvas = new Canvas(output);
 
         RectF shadowRect = new RectF(
@@ -158,12 +175,8 @@ public class ShadowLayout extends FrameLayout{
 
     /*--------------------------------------------------------------------------------------------*/
 
-    public void setInvalidateShadowOnSizeChanged(boolean invalidateShadowOnSizeChanged) {
-        mInvalidateShadowOnSizeChanged = invalidateShadowOnSizeChanged;
-    }
-
     public void invalidateShadow() {
-        mForceInvalidateShadow = true;
+        forceInvalidateShadow = true;
         requestLayout();
         invalidate();
     }
