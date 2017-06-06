@@ -10,17 +10,69 @@
     <com.saltedfishcaptain.library.ShadowLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:corner_radius="2dp"
-        app:shadow_radius="5dp"
+        app:shadow_corner_radius="2dp"
+        app:shadow_blur_radius="4dp"
         app:shadow_color="@color/orange">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="10dp"
             android:textColor="@color/white"
             android:background="@drawable/shape_round_rect_2dp"
-            android:text="TextView" />
+            android:text="Normal" />
+    </com.saltedfishcaptain.library.ShadowLayout>
+
+    <com.saltedfishcaptain.library.ShadowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:shadow_corner_radius="2dp"
+        app:shadow_blur_radius="4dp"
+        app:shadow_offset_x="2dp"
+        app:shadow_offset_y="2dp"
+        app:shadow_color="@color/orange">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_round_rect_2dp"
+            android:text="Offset" />
+    </com.saltedfishcaptain.library.ShadowLayout>
+
+    <com.saltedfishcaptain.library.ShadowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:shadow_corner_radius="2dp"
+        app:shadow_blur_radius="3dp"
+        app:shadow_offset_y="3dp"
+        app:shadow_padding_left="2dp"
+        app:shadow_padding_right="2dp"
+        app:shadow_color="@color/orange">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_round_rect_2dp"
+            android:text="Offset And Padding" />
+    </com.saltedfishcaptain.library.ShadowLayout>
+
+    <com.saltedfishcaptain.library.ShadowLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:shadow_corner_radius="30dp"
+        app:shadow_blur_radius="4dp"
+        app:shadow_color="@color/orange">
+        <TextView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_round"
+            android:text="Round" />
     </com.saltedfishcaptain.library.ShadowLayout>
 
 </LinearLayout>
