@@ -38,8 +38,8 @@ import android.widget.FrameLayout;
 
 public class ShadowLayout extends FrameLayout {
     private int shadowColor; // 阴影颜色
-    private float cornerRadius; // 阴影实体边缘的圆角半径
-    private float shadowRadius; // 投影半径，对应PS阴影设置中的大小，是阴影渐变区的半径，上下左右都会增加区域，0会导致没有阴影
+    private float shadowCornerRadius; // 阴影实体边缘的圆角半径
+    private float shadowBlurRadius; // 投影半径，对应PS阴影设置中的大小，是阴影渐变区的半径，上下左右都会增加区域，0会导致没有阴影
     private float shadowOffsetX; // 阴影X方向的偏移
     private float shadowOffsetY; // 阴影Y方向的偏移
     private float shadowPaddingLeft; // 阴影区域左侧的缩进
@@ -69,11 +69,11 @@ public class ShadowLayout extends FrameLayout {
         initAttributes(context, attrs);
         adjustAttributes();
 
-        int paddingLeft = (int) (shadowRadius - shadowOffsetX - shadowPaddingLeft);
-        int paddingRight = (int) (shadowRadius + shadowOffsetX - shadowPaddingRight);
+        int paddingLeft = (int) (shadowBlurRadius - shadowOffsetX - shadowPaddingLeft);
+        int paddingRight = (int) (shadowBlurRadius + shadowOffsetX - shadowPaddingRight);
 
-        int paddingTop = (int) (shadowRadius - shadowOffsetY - shadowPaddingTop);
-        int paddingBottom = (int) (shadowRadius + shadowOffsetY - shadowPaddingBottom);
+        int paddingTop = (int) (shadowBlurRadius - shadowOffsetY - shadowPaddingTop);
+        int paddingBottom = (int) (shadowBlurRadius + shadowOffsetY - shadowPaddingBottom);
 
         setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
     }
@@ -83,9 +83,9 @@ public class ShadowLayout extends FrameLayout {
 
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.ShadowLayout, 0, 0);
 
-        cornerRadius = attr.getDimension(R.styleable.ShadowLayout_corner_radius,
+        shadowCornerRadius = attr.getDimension(R.styleable.ShadowLayout_shadow_corner_radius,
                 getResources().getDimension(R.dimen.shadow_layout_default_corner_radius));
-        shadowRadius = attr.getDimension(R.styleable.ShadowLayout_shadow_radius,
+        shadowBlurRadius = attr.getDimension(R.styleable.ShadowLayout_shadow_blur_radius,
                 getResources().getDimension(R.dimen.shadow_layout_default_shadow_radius));
         shadowColor = attr.getColor(R.styleable.ShadowLayout_shadow_color,
                 getResources().getColor(R.color.shadow_layout_default_shadow_color));
@@ -145,7 +145,7 @@ public class ShadowLayout extends FrameLayout {
             return;
         }
 
-        Bitmap bitmap = createShadowBitmap(w, h, cornerRadius, shadowRadius, shadowColor);
+        Bitmap bitmap = createShadowBitmap(w, h, shadowCornerRadius, shadowBlurRadius, shadowColor);
         BitmapDrawable drawable = new BitmapDrawable(getResources(), bitmap);
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN) {
             setBackgroundDrawable(drawable);
