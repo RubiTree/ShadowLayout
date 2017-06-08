@@ -168,6 +168,9 @@ public class ShadowLayout extends FrameLayout {
 
         Paint shadowPaint = new Paint();
         shadowPaint.setAntiAlias(true);
+//        shadowPaint.setColor(Color.BLACK);
+//        shadowPaint.setStyle(Paint.Style.STROKE);
+//        shadowPaint.setStrokeWidth(2);
         shadowPaint.setColor(Color.TRANSPARENT);
         shadowPaint.setStyle(Paint.Style.FILL);
         shadowPaint.setShadowLayer(shadowRadius, 0, 0, shadowColor);
